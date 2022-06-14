@@ -1,0 +1,138 @@
+<mat-table [dataSource]="leftPanelDataSource" multiTemplateDataRows matSort>
+<ng-container matColumnDef="select">
+<mat-header-cell *matHeaderCellDef>
+		<mat-checkbox color="primary"
+				(change)="$event ? UserSMasterToggle() : null"
+				[checked]="userSSelection.hasValue() && isAllUserSSelected()"
+				[indeterminate]="userSSelection.hasValue() && !isAllUserSSelected()">
+		</mat-checkbox>
+</mat-header-cell>
+<mat-cell *matCellDef="let row">
+		<mat-checkbox color="primary" (click)="$event.stopPropagation()"
+				(change)="$event ? userSSelection.toggle(row) : null"
+				[checked]="userSSelection.isSelected(row)">
+		</mat-checkbox>
+</mat-cell>
+</ng-container>
+<ng-container matColumnDef="Id">
+        <mat-header-cell *matHeaderCellDef mat-sort-header>
+				Id
+        </mat-header-cell>
+        <mat-cell  *matCellDef="let row" [style.color]="row.color">
+            {{ row.Id }}
+        </mat-cell>
+    </ng-container>
+		<ng-container matColumnDef="Username">
+		<mat-header-cell  *matHeaderCellDef mat-sort-header>
+		Username
+		</mat-header-cell>
+		<mat-cell  *matCellDef="let row" [style.color]="row.color">
+				{{ row.Username }}
+		</mat-cell>
+		</ng-container>
+		<ng-container matColumnDef="Gender">
+		<mat-header-cell  *matHeaderCellDef mat-sort-header>
+		Gender
+		</mat-header-cell>
+		<mat-cell  *matCellDef="let row" [style.color]="row.color">
+				{{ row.Gender }}
+		</mat-cell>
+		</ng-container>
+		<ng-container matColumnDef="LastActive">
+		<mat-header-cell  *matHeaderCellDef mat-sort-header>
+		LastActive
+		</mat-header-cell>
+		<mat-cell  *matCellDef="let row" [style.color]="row.color">
+				{{ row.LastActive }}
+		</mat-cell>
+		</ng-container>
+		<ng-container matColumnDef="City">
+		<mat-header-cell *matHeaderCellDef mat-sort-header>
+		City
+		</mat-header-cell>
+		<mat-cell class="w-100" *matCellDef="let row" [style.color]="row.color">
+				{{ row.City }}
+		</mat-cell>
+		</ng-container>
+
+	<ng-container matColumnDef="expandedDetail">
+		<mat-cell *matCellDef="let element" [attr.colspan]="columnsToDisplay.length">
+			<div class="example-element-detail" [@detailExpand]="element?.expanded" *ngIf="element?.expanded">
+				<div style="width: 100%;">
+
+					<mat-table [dataSource]="usersdataSource[element.Id]" multiTemplateDataRows matSort>
+
+					<ng-container matColumnDef="select">
+					<mat-header-cell class="w-40" *matHeaderCellDef>
+							<mat-checkbox color="primary"
+									(change)="$event ? UserMasterToggle(element.Id) : null"
+									[checked]="userSelectionMap.get(element.Id)?.hasValue() && isAllUserSelected(element.Id)"
+									[indeterminate]="userSelectionMap.get(element.Id)?.hasValue() && !isAllUserSelected(element.Id)">
+							</mat-checkbox>
+					</mat-header-cell>
+					<mat-cell class="w-40" *matCellDef="let row; let i = index;">
+							<mat-checkbox color="primary" (click)="$event.stopPropagation()"
+									(change)="$event ? userSelectionMap.get(element.Id)?.toggle(row) : null"
+									[checked]="userSelectionMap.get(element.Id)?.isSelected(row)">
+							</mat-checkbox>
+					</mat-cell>
+			</ng-container>
+
+
+
+					<ng-container matColumnDef="Id">
+					<mat-header-cell *matHeaderCellDef mat-sort-header>
+					Id
+					</mat-header-cell>
+					<mat-cell  *matCellDef="let row" [style.color]="row.color">
+							{{ row.Id }}
+					</mat-cell>
+			</ng-container>
+			<ng-container matColumnDef="Username">
+			<mat-header-cell  *matHeaderCellDef mat-sort-header>
+			Username
+			</mat-header-cell>
+			<mat-cell  *matCellDef="let row" [style.color]="row.color">
+					{{ row.Username }}
+			</mat-cell>
+			</ng-container>
+			<ng-container matColumnDef="City">
+			<mat-header-cell  *matHeaderCellDef mat-sort-header>
+			City
+			</mat-header-cell>
+			<mat-cell  *matCellDef="let row" [style.color]="row.color">
+					{{ row.City }}
+			</mat-cell>
+			</ng-container>
+			<ng-container matColumnDef="Country">
+			<mat-header-cell  *matHeaderCellDef mat-sort-header>
+			Country
+			</mat-header-cell>
+			<mat-cell  *matCellDef="let row" [style.color]="row.color">
+					{{ row.Country }}
+			</mat-cell>
+			</ng-container>
+
+						<mat-header-row *matHeaderRowDef="innerDisplayedColumns"></mat-header-row>
+						<mat-row *matRowDef="let address; columns: innerDisplayedColumns;"
+							[class.example-element-row]="address.comments?.length" [class.example-expanded-row]="address?.expanded"
+							(click)="address.expanded = !address?.expanded">
+						</mat-row>
+					</mat-table>
+				</div>
+			</div>
+		</mat-cell>
+	</ng-container>
+
+	<mat-header-row *matHeaderRowDef="columnsToDisplay"></mat-header-row>
+	<mat-row *matRowDef="let element; columns: columnsToDisplay;"
+		[class.example-element-row]="element.addresses?.length" [class.example-expanded-row]="element?.expanded"
+		(click)="element.expanded = !element?.expanded ; getProjectDetails(element) ">
+	</mat-row>
+	<mat-row *matRowDef="let row; columns: ['expandedDetail']" class="example-detail-row"></mat-row>
+</mat-table>
+
+
+<!-- Copyright 2019 Google Inc. All Rights Reserved.
+    Use of this source code is governed by an MIT-style license that
+    can be found in the LICENSE file at http://angular.io/license -->
